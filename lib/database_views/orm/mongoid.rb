@@ -5,8 +5,7 @@ module DatabaseViews
 
       included do
         field :path
-        field :source
-        field :partial, type: Boolean, default: false
+        field :contents
         field :formats, default: :html
         field :locale, default: :en
         field :handlers, default: :haml
@@ -15,7 +14,7 @@ module DatabaseViews
         validates :locale,  inclusion: I18n.available_locales.map(&:to_s)
         validates :handlers, inclusion: ActionView::Template::Handlers.extensions.map(&:to_s)
         validates :path, uniqueness: true, presence: true
-        validates :source, presence: true
+        validates :contents, presence: true
 
         after_save do
          DatabaseViews::DatabaseResolver.instance.clear_cache
@@ -23,8 +22,8 @@ module DatabaseViews
       end
 
       module ClassMethods
-        def find_templates(path, partial = false, details)
-          where(path: path, partial: partial).any_in(details)
+        def find_templates(path, details)
+          where(path: path).any_in(details)
         end
 
         def resolver

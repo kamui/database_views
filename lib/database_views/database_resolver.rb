@@ -1,12 +1,6 @@
 module DatabaseViews
-  class DatabaseResolver < ActionView::Resolver
+  class DatabaseResolver < ActionView::PathResolver
     include Singleton
-
-    def find_templates(name, prefix, partial, details)
-      @@model.find_templates(build_path(name, prefix), partial, details).map do |record|
-        initialize_template(record)
-      end
-    end
 
     def self.using(model)
       @@model = model
@@ -14,31 +8,14 @@ module DatabaseViews
     end
 
     private
-    def initialize_template(record)
-      source = record.source
-      identifier = "#{record.class} - #{record.id} - #{record.path.inspect}"
-      handler = ActionView::Template.registered_template_handler(record.handlers)
-
-      details = {
-        format: Mime[record.formats],
-        updated_at: record.updated_at,
-        virtual_path: virtual_path(record.path, record.partial)
-      }
-
-      ActionView::Template.new(source, identifier, handler, details)
-    end
-
-    def build_path(name, prefix)
-      prefix.present? ? "#{prefix}/#{name}" : name
-    end
-
-    def virtual_path(path, partial)
-      return path unless partial
-      if index = path.rindex("/")
-        path.insert(index + 1, "_")
-      else
-        "_#{path}"
+    def query(path, details, formats)
+      templates = []
+      @@model.find_templates(path, details).map do |t|
+        identifier = "#{t.class} - #{t.id} - #{t.path.inspect}"
+        handler = ActionView::Template.registered_template_handler(t.handlers)
+        templates << ActionView::Template.new(t.contents, identifier, handler, virtual_path: path.virtual, format: t.formats, updated_at: t.updated_at)
       end
+      templates
     end
   end
 end

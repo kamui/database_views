@@ -11,8 +11,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Jack Chu"]
   s.email       = ["jack@jackchu.com"]
   s.homepage    = "https://github.com/kamui/database_views"
-  s.summary     = %q{Rails gem to store view templates in your database}
-  s.description = %q{}
+  s.summary     = %q{Rails gem to store view templates in your database.}
+  s.description = %q{Rails gem to store view templates in your database. Current supports only Mongoid.}
 
   s.rubyforge_project = "database_views"
 
@@ -21,8 +21,9 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency "rails", "~> 3.2.1"
+  s.add_runtime_dependency "rails", "~> 3.0"
 
+  s.add_development_dependency "rails", "~> 3.2"
   s.add_development_dependency "sqlite3"
   s.add_development_dependency 'minitest'
   s.add_development_dependency 'rake'

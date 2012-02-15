@@ -8,7 +8,7 @@ module DatabaseViews
         field :contents
         field :formats, default: :html
         field :locale, default: :en
-        field :handlers, default: :haml
+        field :handlers, default: :erb
 
         validates :formats,  inclusion: Mime::SET.symbols.map(&:to_s)
         validates :locale,  inclusion: I18n.available_locales.map(&:to_s)

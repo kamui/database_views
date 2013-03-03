@@ -1,3 +1,7 @@
+## 0.0.3
+
+* Use https for Gemfile source
+
 ## 0.0.2
 
 * Relax rails runtime dependency to ~> 3.0
